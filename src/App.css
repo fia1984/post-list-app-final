@@ -1,0 +1,85 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f8;
+}
+
+.app {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #222;
+  margin-bottom: 30px;
+}
+
+h2 {
+  color: #333;
+}
+
+.form-box,
+.detail-box,
+.post-card,
+.comment-card,
+.comments-box {
+  background-color: white;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+form input,
+form textarea,
+.comment-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+form textarea,
+.comment-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+button {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #0b5ed7;
+}
+
+.back-btn {
+  margin-bottom: 15px;
+  background-color: #6c757d;
+}
+
+.back-btn:hover {
+  background-color: #5c636a;
+}
+
+.post-list {
+  display: grid;
+  gap: 16px;
+}
+
+.post-card h3,
+.comment-card h4 {
+  margin-top: 0;
+}
