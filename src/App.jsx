@@ -22,7 +22,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <h1>Post List App</h1>
+      <h1>Post List Assignment Project</h1>
 
       {selectedPostId ? (
         <PostDetail postId={selectedPostId} goBack={goBack} />
