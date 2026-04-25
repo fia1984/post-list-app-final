@@ -1,31 +1,59 @@
 import { useState } from "react";
-import "./App.css";
-import PostList from "./PostList";
+import { useAuth } from "./context/AuthContext";
 import PostForm from "./PostForm";
+import PostList from "./PostList";
 import PostDetail from "./PostDetail";
+import "./App.css";
 
 export default function App() {
-  const [selectedPostId, setSelectedPostId] = useState(null);
+  const { isLoggedIn, message, login, logout } = useAuth();
+
   const [localPosts, setLocalPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   const addPost = (newPost) => {
-    setLocalPosts((prev) => [newPost, ...prev]);
+    setLocalPosts([newPost, ...localPosts]);
   };
 
-  const openPost = (id) => {
-    setSelectedPostId(id);
+  const openPost = (post) => {
+    setSelectedPost(post);
   };
 
   const goBack = () => {
-    setSelectedPostId(null);
+    setSelectedPost(null);
   };
+
+  if (!isLoggedIn) {
+    return (
+      <div className="login-page">
+        <div className="login-card">
+          <h1>Welcome to Post List App</h1>
+          <p>Please log in to continue.</p>
+
+
+
+          <button className="login-btn" onClick={login}>
+            Log In
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app">
-      <h1>Post List Assignment Project</h1>
+      <div className="top-bar">
+        <h1>Post List App</h1>
 
-      {selectedPostId ? (
-        <PostDetail postId={selectedPostId} goBack={goBack} />
+        <button className="logout-btn" onClick={logout}>
+          Log Out
+        </button>
+      </div>
+
+      {message && <p className="auth-message">{message}</p>}
+
+      {selectedPost ? (
+        <PostDetail post={selectedPost} goBack={goBack} />
       ) : (
         <>
           <PostForm addPost={addPost} />
