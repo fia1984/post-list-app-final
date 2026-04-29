@@ -161,4 +161,9 @@ form button:hover,
 
 .comment-card p {
   margin: 0;
+}.error-message {
+  color: red;
+  font-weight: 600;
+  margin-top: 10px;
+  text-align: center;
 }

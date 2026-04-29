@@ -6,15 +6,17 @@ export default function LoginPage({ goToSignup }) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleLogin = (e) => {
     e.preventDefault();
 
     if (!email || !password) {
-      alert("Please enter email and password");
+      setErrorMessage("Please enter email and password");
       return;
     }
 
+    setErrorMessage("");
     login(email);
   };
 
@@ -41,6 +43,8 @@ export default function LoginPage({ goToSignup }) {
 
           <button type="submit">Login</button>
         </form>
+
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         <p>
           Don&apos;t have an account?{" "}
