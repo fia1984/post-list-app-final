@@ -1,30 +1,49 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 
-export default function PostForm({ addPost }) {
+function PostForm({ addPost }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  console.log("PostForm rendered");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!title.trim() || !body.trim()) {
-      alert("Please fill in both title and body");
+    if (!title || !body) {
+      alert("Please enter title and body");
       return;
     }
 
     const newPost = {
       id: Date.now(),
-      title: title,
-      body: body,
+      title,
+      body,
+      userId: 1,
+      isLocal: true,
     };
 
-    addPost(newPost);
-    setTitle("");
-    setBody("");
+    fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST",
+      body: JSON.stringify(newPost),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then(() => {
+        addPost(newPost);
+        setTitle("");
+        setBody("");
+        setSuccessMessage("Post created successfully");
+      })
+      .catch((error) => {
+        console.log("Error creating post:", error);
+      });
   };
 
   return (
-    <div className="form-box">
+    <div className="post-form">
       <h2>Create New Post</h2>
 
       <form onSubmit={handleSubmit}>
@@ -39,10 +58,16 @@ export default function PostForm({ addPost }) {
           placeholder="Enter post body"
           value={body}
           onChange={(e) => setBody(e.target.value)}
-        ></textarea>
+        />
 
-        <button type="submit">Create Post</button>
+        <button type="submit" className="primary-button">
+          Submit Post
+        </button>
       </form>
+
+      {successMessage && <p className="success-message">{successMessage}</p>}
     </div>
   );
 }
+
+export default memo(PostForm);

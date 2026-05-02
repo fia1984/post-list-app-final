@@ -1,55 +1,70 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useAuth } from "./context/AuthContext";
 
-export default function SignupPage({ goToLogin }) {
+function SignupPage({ goToLogin }) {
   const { signup } = useAuth();
 
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignup = () => {
-    console.log("Sign Up button clicked");
+  console.log("SignupPage rendered");
 
-    if (!name || !email || !password) {
+  const handleSignup = (e) => {
+    e.preventDefault();
+
+    if (!firstName || !lastName || !email || !password) {
       alert("Please fill all fields");
       return;
     }
 
-    signup(name, email);
+    signup(email);
   };
 
   return (
     <div className="auth-card">
+      <h1>Post List App</h1>
       <h2>Create a new account</h2>
-      <p className="auth-subtitle">It's quick and easy.</p>
+      <p className="subtitle">It's quick and easy.</p>
 
-      <input
-        type="text"
-        placeholder="Enter your name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+      <form onSubmit={handleSignup}>
+        <div className="name-row">
+          <input
+            type="text"
+            placeholder="First name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
 
-      <input
-        type="email"
-        placeholder="Enter your email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+          <input
+            type="text"
+            placeholder="Last name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </div>
 
-      <input
-        type="password"
-        placeholder="Create your password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <input
+          type="email"
+          placeholder="Mobile number or email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-      <button type="button" className="signup-btn" onClick={handleSignup}>
-        Sign Up
-      </button>
+        <input
+          type="password"
+          placeholder="New password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <p className="switch-auth">
+        <button type="submit" className="primary-button signup-button">
+          Sign Up
+        </button>
+      </form>
+
+      <p className="auth-switch">
         Already have an account?{" "}
         <button type="button" onClick={goToLogin}>
           Login
@@ -58,3 +73,5 @@ export default function SignupPage({ goToLogin }) {
     </div>
   );
 }
+
+export default memo(SignupPage);

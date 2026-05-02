@@ -1,64 +1,67 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
-export default function PostComments({ postId }) {
+function PostComments({ postId }) {
   const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [commentText, setCommentText] = useState("");
+
+  console.log("PostComments rendered");
 
   useEffect(() => {
     fetch(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
       .then((response) => response.json())
       .then((data) => {
-        setComments(data.slice(0, 5));
-        setLoading(false);
+        setComments(data);
       })
       .catch((error) => {
         console.log("Error fetching comments:", error);
-        setLoading(false);
       });
   }, [postId]);
 
-  const handleAddComment = () => {
-    if (!newComment.trim()) {
+  const handleSubmitComment = (e) => {
+    e.preventDefault();
+
+    if (!commentText) {
       alert("Please enter a comment");
       return;
     }
 
-    const commentToAdd = {
+    const newComment = {
       id: Date.now(),
-      name: "You",
-      body: newComment,
-      email: "you@example.com",
+      name: "New Comment",
+      email: "user@example.com",
+      body: commentText,
     };
 
-    setComments((prev) => [commentToAdd, ...prev]);
-    setNewComment("");
+    setComments((previousComments) => [newComment, ...previousComments]);
+    setCommentText("");
   };
 
   return (
-    <div className="comments-box">
+    <div className="comments-section">
       <h3>Comments</h3>
 
-      <div className="comment-form">
-        <textarea
-          placeholder="Write your comment"
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-        ></textarea>
+      <form onSubmit={handleSubmitComment}>
+        <input
+          type="text"
+          placeholder="Write a comment"
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+        />
 
-        <button onClick={handleAddComment}>Submit Comment</button>
-      </div>
+        <button type="submit" className="primary-button">
+          Submit Comment
+        </button>
+      </form>
 
-      {loading ? (
-        <p>Loading comments...</p>
-      ) : (
-        comments.map((comment) => (
-          <div key={comment.id} className="comment-card">
-            <h4>{comment.name}</h4>
-            <p>{comment.body}</p>
-          </div>
-        ))
-      )}
+      {comments.map((comment) => (
+        <div className="comment-card" key={comment.id}>
+          <h4>{comment.name}</h4>
+          <p>{comment.body}</p>
+          <small>{comment.email}</small>
+        </div>
+      ))}
     </div>
   );
 }
+
+export default memo(PostComments);

@@ -1,45 +1,33 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState("");
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
-  const login = (email) => {
-    const userName = email.split("@")[0];
-
-    setLoggedInUser({
-      name: userName,
-      email: email,
-    });
-
+  const login = useCallback((email) => {
     setIsLoggedIn(true);
-    setMessage(`${userName} logged in successfully`);
+    setLoggedInUser(email);
+    setMessage("Login successful");
     setMessageType("success");
-  };
+  }, []);
 
-  const signup = (name, email) => {
-    setLoggedInUser({
-      name: name,
-      email: email,
-    });
-
+  const signup = useCallback((email) => {
     setIsLoggedIn(true);
-    setMessage(`Welcome ${name}! Your account has been created successfully.`);
+    setLoggedInUser(email);
+    setMessage("Signup successful");
     setMessageType("success");
+  }, []);
 
-    alert(`Welcome ${name}! Your account has been created successfully.`);
-  };
-
-  const logout = () => {
+  const logout = useCallback(() => {
     setIsLoggedIn(false);
-    setLoggedInUser(null);
-    setMessage("User logged out successfully");
+    setLoggedInUser("");
+    setMessage("Logout successful");
     setMessageType("success");
-  };
+  }, []);
 
   return (
     <AuthContext.Provider
