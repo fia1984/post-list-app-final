@@ -9,7 +9,7 @@ function SignupPage({ goToLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  console.log("SignupPage rendered");
+ 
 
   const handleSignup = (e) => {
     e.preventDefault();
