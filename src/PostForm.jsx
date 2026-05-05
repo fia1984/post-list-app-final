@@ -4,11 +4,11 @@ export default function PostForm({ addPost }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmitPost = (e) => {
     e.preventDefault();
 
     if (!title.trim() || !body.trim()) {
-      alert("Please fill in both title and body");
+      alert("Please enter post title and post body");
       return;
     }
 
@@ -16,6 +16,7 @@ export default function PostForm({ addPost }) {
       id: Date.now(),
       title: title,
       body: body,
+      isLocal: true,
     };
 
     addPost(newPost);
@@ -24,10 +25,10 @@ export default function PostForm({ addPost }) {
   };
 
   return (
-    <div className="form-box">
+    <section className="card">
       <h2>Create New Post</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form className="post-form" onSubmit={handleSubmitPost}>
         <input
           type="text"
           placeholder="Enter post title"
@@ -39,10 +40,12 @@ export default function PostForm({ addPost }) {
           placeholder="Enter post body"
           value={body}
           onChange={(e) => setBody(e.target.value)}
-        ></textarea>
+        />
 
-        <button type="submit">Create Post</button>
+        <button type="submit" className="success-btn">
+          Submit Post
+        </button>
       </form>
-    </div>
+    </section>
   );
 }

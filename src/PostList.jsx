@@ -6,10 +6,10 @@ export default function PostList({ localPosts, openPost }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
+    fetch("https://jsonplaceholder.typicode.com/posts?_limit=10")
       .then((response) => response.json())
       .then((data) => {
-        setPosts(data.slice(0, 10));
+        setPosts(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -21,18 +21,18 @@ export default function PostList({ localPosts, openPost }) {
   const allPosts = [...localPosts, ...posts];
 
   return (
-    <div>
+    <section className="posts-section">
       <h2>All Posts</h2>
 
       {loading ? (
         <p>Loading posts...</p>
       ) : (
-        <div className="post-list">
+        <div className="posts-list">
           {allPosts.map((post) => (
             <PostCard key={post.id} post={post} openPost={openPost} />
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }
