@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
@@ -36,27 +36,22 @@ export function AuthProvider({ children }) {
     setMessageType("");
   };
 
-  useEffect(() => {
-    if (!message) return;
-
-    const timer = setTimeout(() => {
-      setMessage("");
-      setMessageType("");
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [message]);
+  const clearMessage = () => {
+    setMessage("");
+    setMessageType("");
+  };
 
   return (
     <AuthContext.Provider
       value={{
         isLoggedIn,
         loggedInUser,
-        message,
-        messageType,
         login,
         signup,
         logout,
+        message,
+        messageType,
+        clearMessage,
       }}
     >
       {children}

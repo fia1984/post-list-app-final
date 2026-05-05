@@ -754,4 +754,41 @@ form button[type="submit"]:hover {
   .logout-button {
     flex: 1;
   }
+}.auth-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  min-width: 280px;
+  max-width: 420px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.18);
+}
+
+.auth-message.success {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.message-close-btn {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0 2px;
+}
+
+.message-close-btn:hover {
+  opacity: 0.7;
 }

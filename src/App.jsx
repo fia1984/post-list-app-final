@@ -8,21 +8,37 @@ import PostList from "./PostList";
 import PostDetail from "./PostDetail";
 
 export default function App() {
-  const { isLoggedIn, loggedInUser, logout, message, messageType } = useAuth();
+  const {
+    isLoggedIn,
+    loggedInUser,
+    logout,
+    message,
+    messageType,
+    clearMessage,
+  } = useAuth();
 
   const [authPage, setAuthPage] = useState("login");
-  const [activePage, setActivePage] = useState("posts");
   const [localPosts, setLocalPosts] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [currentPage, setCurrentPage] = useState("home");
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [isLoggedIn, activePage, selectedPost]);
+  }, [isLoggedIn, selectedPost, currentPage]);
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        clearMessage();
+      }, 6000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [message, clearMessage]);
 
   const addPost = (newPost) => {
     setLocalPosts([newPost, ...localPosts]);
-    setActivePage("posts");
-    setSelectedPost(null);
+    setCurrentPage("home");
   };
 
   const openPost = (post) => {
@@ -33,31 +49,31 @@ export default function App() {
     setSelectedPost(null);
   };
 
-  const goToPosts = () => {
-    setActivePage("posts");
-    setSelectedPost(null);
-  };
-
-  const goToCreatePost = () => {
-    setActivePage("create");
-    setSelectedPost(null);
-  };
-
   const handleLogout = () => {
     logout();
-    setAuthPage("login");
-    setActivePage("posts");
     setSelectedPost(null);
+    setCurrentPage("home");
+    setAuthPage("login");
   };
-
-  const userName =
-    typeof loggedInUser === "string"
-      ? loggedInUser
-      : loggedInUser?.name || "Sammy";
 
   if (!isLoggedIn) {
     return (
       <>
+        {message && (
+          <div className={`auth-message ${messageType}`}>
+            <span>{message}</span>
+
+            <button
+              type="button"
+              className="message-close-btn"
+              onClick={clearMessage}
+              aria-label="Close message"
+            >
+              ×
+            </button>
+          </div>
+        )}
+
         {authPage === "login" ? (
           <LoginPage goToSignup={() => setAuthPage("signup")} />
         ) : (
@@ -68,53 +84,65 @@ export default function App() {
   }
 
   return (
-    <div className="app-page">
-      <header className="app-header">
-        <div>
-          <h1>PostBook</h1>
-          <p>Facebook-style post app</p>
-        </div>
-
-        <nav className="header-actions">
-          {activePage === "posts" ? (
-            <button className="nav-button" onClick={goToCreatePost}>
-              Create Post
-            </button>
-          ) : (
-            <button className="nav-button" onClick={goToPosts}>
-              Posts List
-            </button>
-          )}
-
-          <button className="logout-button" onClick={handleLogout}>
-            Logout
-          </button>
-        </nav>
-      </header>
-
+    <div className="app">
       {message && (
         <div className={`auth-message ${messageType}`}>
           <span>{message}</span>
+
+          <button
+            type="button"
+            className="message-close-btn"
+            onClick={clearMessage}
+            aria-label="Close message"
+          >
+            ×
+          </button>
         </div>
       )}
 
-      {activePage === "posts" && !selectedPost && (
-        <section className="welcome-card compact-welcome">
-          <div className="welcome-avatar">
-            {userName.charAt(0).toUpperCase()}
-          </div>
+      <header className="app-header">
+        <div>
+          <h1>Post List App</h1>
+          <p>Welcome, {loggedInUser?.name}</p>
+        </div>
 
-          <div>
-            <h2>{userName}</h2>
-            <p>Welcome back to your post app.</p>
-          </div>
-        </section>
-      )}
+        <div className="header-actions">
+          <button
+            type="button"
+            className="nav-button"
+            onClick={() => {
+              setCurrentPage("home");
+              setSelectedPost(null);
+            }}
+          >
+            Home
+          </button>
 
-      <main className="main-content">
+          <button
+            type="button"
+            className="nav-button"
+            onClick={() => {
+              setCurrentPage("create");
+              setSelectedPost(null);
+            }}
+          >
+            Create Post
+          </button>
+
+          <button
+            type="button"
+            className="logout-button"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </div>
+      </header>
+
+      <main>
         {selectedPost ? (
           <PostDetail post={selectedPost} goBack={goBack} />
-        ) : activePage === "create" ? (
+        ) : currentPage === "create" ? (
           <PostForm addPost={addPost} />
         ) : (
           <PostList localPosts={localPosts} openPost={openPost} />
