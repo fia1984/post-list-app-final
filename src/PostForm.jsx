@@ -1,52 +1,34 @@
-import { memo, useState } from "react";
+import { useState } from "react";
 
-function PostForm({ addPost }) {
+export default function PostForm({ addPost }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
 
-  console.log("PostForm rendered");
-
-  const handleSubmit = (e) => {
+  const handleSubmitPost = (e) => {
     e.preventDefault();
 
-    if (!title || !body) {
-      alert("Please enter title and body");
+    if (!title.trim() || !body.trim()) {
+      alert("Please enter post title and post body");
       return;
     }
 
     const newPost = {
       id: Date.now(),
-      title,
-      body,
-      userId: 1,
+      title: title,
+      body: body,
       isLocal: true,
     };
 
-    fetch("https://jsonplaceholder.typicode.com/posts", {
-      method: "POST",
-      body: JSON.stringify(newPost),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then(() => {
-        addPost(newPost);
-        setTitle("");
-        setBody("");
-        setSuccessMessage("Post created successfully");
-      })
-      .catch((error) => {
-        console.log("Error creating post:", error);
-      });
+    addPost(newPost);
+    setTitle("");
+    setBody("");
   };
 
   return (
-    <div className="post-form">
+    <section className="card">
       <h2>Create New Post</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form className="post-form" onSubmit={handleSubmitPost}>
         <input
           type="text"
           placeholder="Enter post title"
@@ -60,14 +42,10 @@ function PostForm({ addPost }) {
           onChange={(e) => setBody(e.target.value)}
         />
 
-        <button type="submit" className="primary-button">
+        <button type="submit" className="success-btn">
           Submit Post
         </button>
       </form>
-
-      {successMessage && <p className="success-message">{successMessage}</p>}
-    </div>
+    </section>
   );
 }
-
-export default memo(PostForm);

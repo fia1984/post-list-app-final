@@ -1,77 +1,73 @@
-import { memo, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "./context/AuthContext";
 
-function SignupPage({ goToLogin }) {
-  const { signup } = useAuth();
+export default function SignupPage({ goToLogin }) {
+  const { signup, message, messageType } = useAuth();
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
- 
 
   const handleSignup = (e) => {
     e.preventDefault();
 
-    if (!firstName || !lastName || !email || !password) {
+    if (!name.trim() || !email.trim() || !password.trim()) {
       alert("Please fill all fields");
       return;
     }
 
-    signup(email);
+    signup(name, email);
   };
 
   return (
-    <div className="auth-card">
-      <h1>Post List App</h1>
-      <h2>Create a new account</h2>
-      <p className="subtitle">It's quick and easy.</p>
+    <main className="auth-page">
+      <section className="auth-info">
+        <h1>Post List App</h1>
+        <p>Connect with posts, comments, and people around your learning world.</p>
+      </section>
 
-      <form onSubmit={handleSignup}>
-        <div className="name-row">
+      <section className="auth-card">
+        <h2>Create a new account</h2>
+        <p>It is quick and easy.</p>
+
+        {message && messageType !== "logout" && (
+          <div className={`message-box ${messageType}`}>{message}</div>
+        )}
+
+        <form onSubmit={handleSignup}>
           <input
             type="text"
-            placeholder="First name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="Enter your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
 
           <input
-            type="text"
-            placeholder="Last name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
+
+          <input
+            type="password"
+            placeholder="Create password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <button type="submit" className="success-btn">
+            Sign Up
+          </button>
+        </form>
+
+        <div className="auth-switch">
+          <span>Already have an account?</span>
+          <button type="button" onClick={goToLogin}>
+            Login
+          </button>
         </div>
-
-        <input
-          type="email"
-          placeholder="Mobile number or email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <input
-          type="password"
-          placeholder="New password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button type="submit" className="primary-button signup-button">
-          Sign Up
-        </button>
-      </form>
-
-      <p className="auth-switch">
-        Already have an account?{" "}
-        <button type="button" onClick={goToLogin}>
-          Login
-        </button>
-      </p>
-    </div>
+      </section>
+    </main>
   );
 }
-
-export default memo(SignupPage);

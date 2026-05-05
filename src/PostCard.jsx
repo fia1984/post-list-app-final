@@ -1,18 +1,12 @@
-import { memo } from "react";
-
-function PostCard({ post, openPost }) {
-  console.log("PostCard rendered:", post.id);
-
+export default function PostCard({ post, openPost }) {
   return (
-    <div className="post-card">
+    <article className="post-list-card">
       <h3>{post.title}</h3>
       <p>{post.body}</p>
 
-      <button onClick={() => openPost(post)} className="secondary-button">
+      <button type="button" onClick={() => openPost(post)}>
         View Details
       </button>
-    </div>
+    </article>
   );
 }
-
-export default memo(PostCard);
